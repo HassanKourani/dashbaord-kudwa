@@ -61,7 +61,7 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }).format(originalValue);
-              return [formatted, ""];
+              return [formatted, name];
             }}
           />
           <Legend

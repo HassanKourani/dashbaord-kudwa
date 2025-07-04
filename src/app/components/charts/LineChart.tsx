@@ -66,14 +66,14 @@ export default function CustomLineChart({
               borderRadius: "8px",
               color: "#262626",
             }}
-            formatter={(value: number) => {
+            formatter={(value: number, name: string) => {
               const formatted = new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }).format(value);
-              return [formatted, ""];
+              return [formatted, name];
             }}
           />
           <Legend />
