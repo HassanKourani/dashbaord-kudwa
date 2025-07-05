@@ -49,7 +49,7 @@ export default function Report() {
 
   if (loading) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-[400px]">
+      <div className="p-4 lg:p-6 flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-[#698AC5] mx-auto mb-4" />
           <p className="text-[#B09280]">Loading report data...</p>
@@ -60,8 +60,8 @@ export default function Report() {
 
   if (error) {
     return (
-      <div className="p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-6">
+      <div className="p-4 lg:p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
           <div className="flex items-center gap-3 text-[#B09280]">
             <AlertCircle className="w-6 h-6" />
             <div>
@@ -76,8 +76,8 @@ export default function Report() {
 
   if (!data) {
     return (
-      <div className="p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-6">
+      <div className="p-4 lg:p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
           <p className="text-[#B09280]">No report data available</p>
         </div>
       </div>
@@ -126,18 +126,18 @@ export default function Report() {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#262626] mb-2">
+    <div className="p-4 lg:p-6">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-2xl lg:text-3xl font-bold text-[#262626] mb-2">
           Financial Report
         </h1>
-        <p className="text-[#B09280] text-lg">
+        <p className="text-[#B09280] text-base lg:text-lg">
           Comprehensive financial analysis from {data.reportResult.startingDate}{" "}
           to {data.reportResult.endingDate}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
         <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-[#698AC5] rounded-full flex items-center justify-center">
@@ -207,7 +207,7 @@ export default function Report() {
         expandedSections={expandedSections.size}
       />
 
-      <div className="space-y-6">
+      <div className="space-y-4 lg:space-y-6">
         {Object.entries(sectionsByType).map(([type, sections]) => (
           <div key={type} className="space-y-4">
             <div className="flex items-center gap-3 mb-4">

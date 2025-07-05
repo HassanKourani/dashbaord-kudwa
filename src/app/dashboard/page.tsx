@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-[400px]">
+      <div className="p-4 lg:p-6 flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-[#698AC5] mx-auto mb-4" />
           <p className="text-[#B09280]">Loading {selectedPeriod} data...</p>
@@ -51,8 +51,8 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-6">
+      <div className="p-4 lg:p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
           <div className="flex items-center gap-3 text-[#B09280]">
             <AlertCircle className="w-6 h-6" />
             <div>
@@ -67,8 +67,8 @@ export default function Dashboard() {
 
   if (!data) {
     return (
-      <div className="p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-6">
+      <div className="p-4 lg:p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
           <p className="text-[#B09280]">No data available</p>
         </div>
       </div>
@@ -76,12 +76,12 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#262626] mb-2">
+    <div className="p-4 lg:p-6">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-2xl lg:text-3xl font-bold text-[#262626] mb-2">
           Main Dashboard
         </h1>
-        <p className="text-[#B09280] text-lg">
+        <p className="text-[#B09280] text-base lg:text-lg">
           Analytics and insights for {data.mainDashboard.startDate} -{" "}
           {data.mainDashboard.endDate}
         </p>
@@ -97,7 +97,7 @@ export default function Dashboard() {
           <h2 className="text-xl font-semibold text-[#262626] mb-4">
             Key Performance Indicators
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {data.mainDashboardKPIs.topKPIs.map((kpi, index) => (
               <KPICard key={index} kpi={kpi} isTopKPI={true} />
             ))}
@@ -110,7 +110,7 @@ export default function Dashboard() {
           <h2 className="text-xl font-semibold text-[#262626] mb-4">
             Financial Metrics
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {data.mainDashboardKPIs.KPIs.map((kpi, index) => (
               <KPICard key={index} kpi={kpi} />
             ))}
@@ -118,7 +118,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="space-y-8">
+      <div className="space-y-6 lg:space-y-8">
         {data.mainDashboard.charts.cashAtBank.length > 0 && (
           <CustomLineChart
             data={data.mainDashboard.charts.cashAtBank}
@@ -127,7 +127,7 @@ export default function Dashboard() {
           />
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {data.mainDashboard.charts.expenseSplit.length > 0 && (
             <CustomPieChart
               data={data.mainDashboard.charts.expenseSplit}

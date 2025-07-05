@@ -39,9 +39,15 @@ export default function MixedChart({
   const lineColor = "#EAE62F";
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-6">
-      <h3 className="text-lg font-semibold text-[#262626] mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={400}>
+    <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
+      <h3 className="text-base lg:text-lg font-semibold text-[#262626] mb-4">
+        {title}
+      </h3>
+      <ResponsiveContainer
+        width="100%"
+        height={300}
+        className="min-h-[250px] lg:min-h-[400px]"
+      >
         <ComposedChart
           data={chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}

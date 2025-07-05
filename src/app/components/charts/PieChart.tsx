@@ -26,9 +26,15 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
   const COLORS = ["#698AC5", "#B09280", "#EAE62F", "#262626", "#FBFAFA"];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-6">
-      <h3 className="text-lg font-semibold text-[#262626] mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={300}>
+    <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
+      <h3 className="text-base lg:text-lg font-semibold text-[#262626] mb-4">
+        {title}
+      </h3>
+      <ResponsiveContainer
+        width="100%"
+        height={250}
+        className="min-h-[200px] lg:min-h-[300px]"
+      >
         <PieChart>
           <Pie
             data={chartData}
