@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   PieChart,
   Pie,
@@ -16,6 +17,19 @@ interface PieChartProps {
 }
 
 export default function CustomPieChart({ data, title }: PieChartProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   // Transform data for recharts
   const chartData = data.map((item) => ({
     name: item.name,
@@ -27,19 +41,17 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
-      <h3 className="text-base lg:text-lg font-semibold text-[#262626] mb-4">
+      <h3 className="text-base lg:text-lg font-semibold text-[#262626] mb-6">
         {title}
       </h3>
       <ResponsiveContainer
         width="100%"
-        height={250}
-        className="min-h-[200px] lg:min-h-[300px]"
+        height={450}
+        className="flex flex-col gap-10"
       >
         <PieChart>
           <Pie
             data={chartData}
-            cx="50%"
-            cy="50%"
             innerRadius={60}
             outerRadius={100}
             paddingAngle={2}
@@ -58,6 +70,7 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
               border: "1px solid #B09280",
               borderRadius: "8px",
               color: "#262626",
+              fontSize: isMobile ? "12px" : "14px",
             }}
             formatter={(value: number, name: string, props) => {
               const originalValue = props.payload.originalValue;
@@ -71,9 +84,16 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
             }}
           />
           <Legend
-            wrapperStyle={{ fontSize: "12px", color: "#262626" }}
+            wrapperStyle={{
+              fontSize: isMobile ? "10px" : "12px",
+              color: "#262626",
+              paddingTop: "10px",
+            }}
+            iconSize={isMobile ? 8 : 10}
             formatter={(value) =>
-              value.length > 20 ? value.substring(0, 20) + "..." : value
+              value.length > (isMobile ? 15 : 20)
+                ? value.substring(0, isMobile ? 15 : 20) + "..."
+                : value
             }
           />
         </PieChart>
