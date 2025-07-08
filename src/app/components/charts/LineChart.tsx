@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { ChartData } from "@/app/utils/dataLoader";
+import { TrendingUp } from "lucide-react";
 
 interface LineChartProps {
   data: ChartData[];
@@ -48,60 +49,80 @@ export default function CustomLineChart({
     return dataPoint;
   });
 
-  const colors = ["#698AC5", "#B09280", "#EAE62F", "#262626", "#FBFAFA"];
+  const colors = ["#698AC5", "#B09280", "#EAE62F", "#262626"];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
-      <h3 className="text-base lg:text-lg font-semibold text-[#262626] mb-6">
-        {title}
-      </h3>
+    <div className="card p-8 animate-in">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-10 h-10 bg-[#698AC5] rounded-lg flex items-center justify-center">
+          <TrendingUp className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold text-[#262626]">{title}</h3>
+          <p className="text-sm text-[#B09280]">Financial trends over time</p>
+        </div>
+      </div>
+
+      {/* Chart */}
       <ResponsiveContainer
         width="100%"
-        height={isMobile ? 280 : 300}
-        className="min-h-[280px] lg:min-h-[300px]"
+        height={isMobile ? 350 : 400}
+        className="min-h-[350px] lg:min-h-[400px]"
       >
         <LineChart
           data={chartData}
           margin={{
-            top: 10,
-            right: isMobile ? 10 : 20,
-            left: isMobile ? 10 : 20,
-            bottom: isMobile ? 80 : 15,
+            top: 20,
+            right: isMobile ? 20 : 30,
+            left: isMobile ? 20 : 30,
+            bottom: isMobile ? 80 : 20,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#B09280" opacity={0.3} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#B09280"
+            opacity={0.2}
+            vertical={false}
+          />
           <XAxis
             dataKey="date"
             tick={{
-              fill: "#262626",
-              fontSize: isMobile ? 10 : 12,
+              fill: "#B09280",
+              fontSize: isMobile ? 11 : 12,
+              fontWeight: 500,
             }}
-            tickLine={{ stroke: "#B09280" }}
+            tickLine={{ stroke: "#B09280", strokeWidth: 1 }}
+            axisLine={{ stroke: "#B09280", strokeWidth: 1 }}
             angle={isMobile ? -45 : 0}
             textAnchor={isMobile ? "end" : "middle"}
-            height={isMobile ? 70 : 30}
+            height={isMobile ? 80 : 40}
             interval="preserveStartEnd"
           />
           <YAxis
             tick={{
-              fill: "#262626",
-              fontSize: isMobile ? 10 : 12,
+              fill: "#B09280",
+              fontSize: isMobile ? 11 : 12,
+              fontWeight: 500,
             }}
-            tickLine={{ stroke: "#B09280" }}
-            width={isMobile ? 50 : 60}
+            tickLine={{ stroke: "#B09280", strokeWidth: 1 }}
+            axisLine={{ stroke: "#B09280", strokeWidth: 1 }}
+            width={isMobile ? 60 : 80}
             tickFormatter={(value) => {
-              if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
-              if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
-              return value.toString();
+              if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+              if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
+              return `$${value}`;
             }}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#FBFAFA",
+              backgroundColor: "white",
               border: "1px solid #B09280",
-              borderRadius: "8px",
+              borderRadius: "12px",
+              boxShadow: "0 10px 15px -3px rgba(38, 38, 38, 0.1)",
               color: "#262626",
-              fontSize: isMobile ? "12px" : "14px",
+              fontSize: isMobile ? "13px" : "14px",
+              fontWeight: 500,
             }}
             formatter={(value: number, name: string) => {
               const formatted = new Intl.NumberFormat("en-US", {
@@ -112,13 +133,20 @@ export default function CustomLineChart({
               }).format(value);
               return [formatted, name];
             }}
+            labelStyle={{
+              color: "#698AC5",
+              fontWeight: 600,
+              marginBottom: "8px",
+            }}
           />
           <Legend
             wrapperStyle={{
-              fontSize: isMobile ? "10px" : "12px",
+              paddingTop: "20px",
+              fontSize: isMobile ? "12px" : "14px",
               color: "#262626",
+              fontWeight: 500,
             }}
-            iconSize={isMobile ? 8 : 10}
+            iconSize={isMobile ? 12 : 14}
           />
           {data.map((series, index) => (
             <Line
@@ -126,9 +154,19 @@ export default function CustomLineChart({
               type="monotone"
               dataKey={series.name}
               stroke={colors[index % colors.length]}
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              activeDot={{ r: 6 }}
+              strokeWidth={3}
+              dot={{
+                r: 5,
+                fill: colors[index % colors.length],
+                strokeWidth: 2,
+                stroke: "white",
+              }}
+              activeDot={{
+                r: 8,
+                fill: colors[index % colors.length],
+                strokeWidth: 3,
+                stroke: "white",
+              }}
             />
           ))}
         </LineChart>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, BarChart3, FileText, ChevronRight } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -11,14 +11,16 @@ export default function Sidebar() {
 
   const menuItems = [
     {
-      name: "Main Dashboard",
+      name: "Dashboard",
       href: "/dashboard",
-      icon: "📊",
+      icon: BarChart3,
+      description: "Analytics & insights",
     },
     {
-      name: "Report",
+      name: "Reports",
       href: "/report",
-      icon: "📋",
+      icon: FileText,
+      description: "Financial reports",
     },
   ];
 
@@ -35,63 +37,101 @@ export default function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileMenu}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-[#262626] text-[#FBFAFA] p-2 rounded-lg shadow-lg hover:bg-[#B09280] transition-colors"
+        className="fixed top-6 left-6 z-50 lg:hidden bg-white shadow-lg border border-[#B09280]/20 text-[#262626] p-3 rounded-xl hover:bg-[#FBFAFA] transition-all duration-200 hover:shadow-xl"
         aria-label="Toggle menu"
       >
         {isMobileMenuOpen ? (
-          <X className="w-6 h-6" />
+          <X className="w-5 h-5" />
         ) : (
-          <Menu className="w-6 h-6" />
+          <Menu className="w-5 h-5" />
         )}
       </button>
 
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 backdrop-blur-sm bg-white/10 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
           onClick={closeMobileMenu}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed left-0 top-0 w-64 h-screen bg-[#262626] text-[#FBFAFA] flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed left-0 top-0 w-72 h-screen bg-white border-r border-[#B09280]/10 flex flex-col z-50 transform transition-transform duration-300 ease-out ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        } lg:translate-x-0 animate-in shadow-xl lg:shadow-none`}
       >
-        <div className="p-6 border-b border-[#B09280]/20">
-          <h1 className="text-xl font-bold text-[#EAE62F]">Dashboard</h1>
-          <p className="text-sm text-[#B09280] mt-1">Analytics & Reports</p>
+        {/* Header */}
+        <div className="p-8 border-b border-[#B09280]/10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#698AC5] to-[#B09280] rounded-xl flex items-center justify-center">
+              <BarChart3 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-[#262626]">Analytics</h1>
+              <p className="text-sm text-[#B09280]">Dashboard Suite</p>
+            </div>
+          </div>
         </div>
 
-        <nav className="flex-1 p-4 overflow-y-auto">
-          <ul className="space-y-2">
+        {/* Navigation */}
+        <nav className="flex-1 p-6 overflow-y-auto">
+          <div className="space-y-2">
             {menuItems.map((item) => {
               const isActive = pathname === item.href;
+              const Icon = item.icon;
               return (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    onClick={closeMobileMenu}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 hover:bg-[#B09280]/10 ${
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={closeMobileMenu}
+                  className={`group flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 relative ${
+                    isActive
+                      ? "bg-[#698AC5] text-white shadow-lg"
+                      : "text-[#262626] hover:bg-[#FBFAFA] hover:shadow-sm"
+                  }`}
+                >
+                  <div
+                    className={`p-2 rounded-lg ${
                       isActive
-                        ? "bg-[#698AC5] text-white shadow-lg"
-                        : "text-[#FBFAFA] hover:text-[#EAE62F]"
+                        ? "bg-white/20"
+                        : "bg-[#B09280]/10 group-hover:bg-[#698AC5]/10"
                     }`}
                   >
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="font-medium">{item.name}</span>
-                  </Link>
-                </li>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-base">{item.name}</h3>
+                    <p
+                      className={`text-sm ${
+                        isActive ? "text-white/80" : "text-[#B09280]"
+                      }`}
+                    >
+                      {item.description}
+                    </p>
+                  </div>
+                  {isActive && (
+                    <ChevronRight className="w-5 h-5 text-white/60" />
+                  )}
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#EAE62F] rounded-r-full" />
+                  )}
+                </Link>
               );
             })}
-          </ul>
+          </div>
         </nav>
 
-        <div className="p-4 border-t border-[#B09280]/20">
-          <div className="text-xs text-[#B09280]">
-            <p>© 2025 Dashboard</p>
-            <p>Version 1.0</p>
+        {/* Footer */}
+        <div className="p-6 border-t border-[#B09280]/10">
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#FBFAFA] rounded-xl">
+            <div className="w-2 h-2 bg-[#EAE62F] rounded-full animate-pulse"></div>
+            <div>
+              <p className="text-sm font-medium text-[#262626]">
+                System Status
+              </p>
+              <p className="text-xs text-[#B09280]">All systems operational</p>
+            </div>
           </div>
         </div>
       </div>

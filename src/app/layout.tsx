@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dashboard - Analytics & Reports",
-  description: "Frontend dashboard and reporting interface",
+  title: "Analytics Dashboard - Modern UI",
+  description: "Modern dashboard interface for analytics and reporting",
 };
 
 export default function RootLayout({
@@ -29,8 +29,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Sidebar />
-        <main className="lg:ml-64 bg-[#FBFAFA] min-h-screen pt-16 lg:pt-0">
-          {children}
+        <main className="lg:ml-72 bg-[#FBFAFA] min-h-screen pt-20 lg:pt-0 transition-all duration-300">
+          <div className="max-w-7xl mx-auto">{children}</div>
         </main>
       </body>
     </html>

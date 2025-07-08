@@ -10,6 +10,7 @@ import {
   Legend,
 } from "recharts";
 import { ChartData } from "@/app/utils/dataLoader";
+import { PieChart as PieChartIcon } from "lucide-react";
 
 interface PieChartProps {
   data: ChartData[];
@@ -37,59 +38,81 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
     originalValue: typeof item.values === "number" ? item.values : 0,
   }));
 
-  const COLORS = ["#698AC5", "#B09280", "#EAE62F", "#262626", "#FBFAFA"];
+  const COLORS = ["#698AC5", "#B09280", "#EAE62F", "#262626"];
+
+  const total = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-[#B09280]/20 p-4 lg:p-6">
-      <h3 className="text-base lg:text-lg font-semibold text-[#262626] mb-6">
-        {title}
-      </h3>
+    <div className="card p-8 animate-in">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-10 h-10 bg-[#B09280] rounded-lg flex items-center justify-center">
+          <PieChartIcon className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold text-[#262626]">{title}</h3>
+          <p className="text-sm text-[#B09280]">Breakdown by category</p>
+        </div>
+      </div>
+
+      {/* Chart */}
       <ResponsiveContainer
         width="100%"
-        height={450}
-        className="flex flex-col gap-10"
+        height={isMobile ? 350 : 400}
+        className="min-h-[350px] lg:min-h-[400px]"
       >
         <PieChart>
           <Pie
             data={chartData}
-            innerRadius={60}
-            outerRadius={100}
-            paddingAngle={2}
+            innerRadius={isMobile ? 50 : 70}
+            outerRadius={isMobile ? 90 : 120}
+            paddingAngle={3}
             dataKey="value"
           >
             {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
+                stroke="white"
+                strokeWidth={2}
               />
             ))}
           </Pie>
           <Tooltip
             contentStyle={{
-              backgroundColor: "#FBFAFA",
+              backgroundColor: "white",
               border: "1px solid #B09280",
-              borderRadius: "8px",
+              borderRadius: "12px",
+              boxShadow: "0 10px 15px -3px rgba(38, 38, 38, 0.1)",
               color: "#262626",
-              fontSize: isMobile ? "12px" : "14px",
+              fontSize: isMobile ? "13px" : "14px",
+              fontWeight: 500,
             }}
             formatter={(value: number, name: string, props) => {
               const originalValue = props.payload.originalValue;
+              const percentage = ((value / total) * 100).toFixed(1);
               const formatted = new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }).format(originalValue);
-              return [formatted, name];
+              return [`${formatted} (${percentage}%)`, name];
+            }}
+            labelStyle={{
+              color: "#698AC5",
+              fontWeight: 600,
+              marginBottom: "8px",
             }}
           />
           <Legend
             wrapperStyle={{
-              fontSize: isMobile ? "10px" : "12px",
+              paddingTop: "20px",
+              fontSize: isMobile ? "12px" : "14px",
               color: "#262626",
-              paddingTop: "10px",
+              fontWeight: 500,
             }}
-            iconSize={isMobile ? 8 : 10}
+            iconSize={isMobile ? 12 : 14}
             formatter={(value) =>
               value.length > (isMobile ? 15 : 20)
                 ? value.substring(0, isMobile ? 15 : 20) + "..."
@@ -98,6 +121,29 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
           />
         </PieChart>
       </ResponsiveContainer>
+
+      {/* Summary */}
+      <div className="mt-6 p-4 bg-gradient-to-r from-[#698AC5]/5 to-[#B09280]/5 rounded-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-[#262626]">Total</p>
+            <p className="text-lg font-semibold text-[#698AC5]">
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }).format(total)}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm font-medium text-[#262626]">Categories</p>
+            <p className="text-lg font-semibold text-[#B09280]">
+              {chartData.length}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
