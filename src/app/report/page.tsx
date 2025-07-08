@@ -10,6 +10,7 @@ import {
 import ReportPeriodSelector from "@/app/components/report/ReportPeriodSelector";
 import ReportItem from "@/app/components/report/ReportItem";
 import ReportControls from "@/app/components/report/ReportControls";
+import ProfitLossChart from "@/app/components/charts/ProfitLossChart";
 import {
   Loader2,
   AlertCircle,
@@ -205,6 +206,13 @@ export default function Report() {
         onCollapseAll={handleCollapseAll}
         totalSections={data.reportResult.profitnLoss.length}
         expandedSections={expandedSections.size}
+      />
+
+      <ProfitLossChart
+        sections={data.reportResult.profitnLoss}
+        dateLabels={dateLabels}
+        period={selectedPeriod}
+        title="Profit & Loss Overview"
       />
 
       <div className="space-y-4 lg:space-y-6">
