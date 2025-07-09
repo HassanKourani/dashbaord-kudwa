@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  ReportData,
-  ReportPeriodType,
-  loadReportData,
-  generateDateLabels,
-} from "@/app/utils/reportDataLoader";
+import { useEffect } from "react";
+import { generateDateLabels } from "@/app/utils/reportDataLoader";
 import ReportPeriodSelector from "@/app/components/report/ReportPeriodSelector";
 import ReportItem from "@/app/components/report/ReportItem";
 import ReportControls from "@/app/components/report/ReportControls";
 import ProfitLossChart from "@/app/components/charts/ProfitLossChart";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import {
+  fetchReportData,
+  setPeriod,
+  toggleSection,
+  expandAllSections,
+  collapseAllSections,
+} from "@/app/store/slices/reportSlice";
 import {
   Loader2,
   AlertCircle,
@@ -21,32 +24,13 @@ import {
 } from "lucide-react";
 
 export default function Report() {
-  const [selectedPeriod, setSelectedPeriod] =
-    useState<ReportPeriodType>("monthly");
-  const [data, setData] = useState<ReportData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [expandedSections, setExpandedSections] = useState<Set<number>>(
-    new Set()
-  );
+  const dispatch = useAppDispatch();
+  const { selectedPeriod, data, loading, error, expandedSections } =
+    useAppSelector((state) => state.report);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const reportData = await loadReportData();
-        setData(reportData);
-      } catch (err) {
-        setError("Failed to load report data. Please try again.");
-        console.error("Error loading report data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+    dispatch(fetchReportData());
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -117,13 +101,11 @@ export default function Report() {
   };
 
   const handleExpandAll = () => {
-    const allSectionIds =
-      data?.reportResult.profitnLoss.map((section) => section.id) || [];
-    setExpandedSections(new Set(allSectionIds));
+    dispatch(expandAllSections());
   };
 
   const handleCollapseAll = () => {
-    setExpandedSections(new Set());
+    dispatch(collapseAllSections());
   };
 
   return (
@@ -198,14 +180,14 @@ export default function Report() {
 
       <ReportPeriodSelector
         selectedPeriod={selectedPeriod}
-        onPeriodChange={setSelectedPeriod}
+        onPeriodChange={(period) => dispatch(setPeriod(period))}
       />
 
       <ReportControls
         onExpandAll={handleExpandAll}
         onCollapseAll={handleCollapseAll}
         totalSections={data.reportResult.profitnLoss.length}
-        expandedSections={expandedSections.size}
+        expandedSections={expandedSections.length}
       />
 
       <ProfitLossChart
@@ -241,15 +223,9 @@ export default function Report() {
                 dateLabels={dateLabels}
                 startDate={data.reportResult.startingDate}
                 endDate={data.reportResult.endingDate}
-                isExpanded={expandedSections.has(section.id)}
+                isExpanded={expandedSections.includes(section.id)}
                 onToggleExpanded={(sectionId: number, isExpanded: boolean) => {
-                  const newExpanded = new Set(expandedSections);
-                  if (isExpanded) {
-                    newExpanded.add(sectionId);
-                  } else {
-                    newExpanded.delete(sectionId);
-                  }
-                  setExpandedSections(newExpanded);
+                  dispatch(toggleSection({ sectionId, isExpanded }));
                 }}
               />
             ))}

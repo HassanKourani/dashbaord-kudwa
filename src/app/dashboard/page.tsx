@@ -1,17 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  DashboardData,
-  PeriodType,
-  loadDashboardData,
-} from "@/app/utils/dataLoader";
+import { useEffect } from "react";
+import { PeriodType } from "@/app/utils/dataLoader";
 import PeriodSelector from "@/app/components/PeriodSelector";
 import KPICard from "@/app/components/KPICard";
 import CustomLineChart from "@/app/components/charts/LineChart";
 import CustomPieChart from "@/app/components/charts/PieChart";
 import CustomBarChart from "@/app/components/charts/BarChart";
 import MixedChart from "@/app/components/charts/MixedChart";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import {
+  fetchDashboardData,
+  setPeriod,
+} from "@/app/store/slices/dashboardSlice";
 import {
   Loader2,
   AlertCircle,
@@ -21,28 +22,19 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>("monthly");
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { selectedPeriod, data, loading, error } = useAppSelector(
+    (state) => state.dashboard
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const dashboardData = await loadDashboardData(selectedPeriod);
-        setData(dashboardData);
-      } catch (err) {
-        setError(`Failed to load ${selectedPeriod} data. Please try again.`);
-        console.error("Error loading dashboard data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(fetchDashboardData(selectedPeriod));
+  }, [dispatch, selectedPeriod]);
 
-    fetchData();
-  }, [selectedPeriod]);
+  const handlePeriodChange = (period: PeriodType) => {
+    dispatch(setPeriod(period));
+    dispatch(fetchDashboardData(period));
+  };
 
   if (loading) {
     return (
@@ -73,7 +65,7 @@ export default function Dashboard() {
             </h3>
             <p className="text-[#B09280] mb-4">{error}</p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => dispatch(fetchDashboardData(selectedPeriod))}
               className="px-6 py-2 bg-[#698AC5] text-white rounded-lg hover:bg-[#698AC5]/90 transition-colors"
             >
               Try Again
@@ -126,7 +118,7 @@ export default function Dashboard() {
       {/* Period Selector */}
       <PeriodSelector
         selectedPeriod={selectedPeriod}
-        onPeriodChange={setSelectedPeriod}
+        onPeriodChange={handlePeriodChange}
       />
 
       {/* Top KPIs */}
