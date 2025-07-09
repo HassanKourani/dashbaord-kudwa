@@ -42,6 +42,20 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
 
   const total = chartData.reduce((sum, item) => sum + item.value, 0);
 
+  // Calculate dynamic height based on legend items
+  const calculateChartHeight = () => {
+    const baseChartHeight = isMobile ? 280 : 320; // Reduced base height to make room for legend
+    const legendItemHeight = isMobile ? 20 : 24; // Height per legend item
+    const legendPadding = 40; // Additional padding for legend
+    const legendItemsPerRow = isMobile ? 1 : Math.min(2, chartData.length); // Items per row
+    const legendRows = Math.ceil(chartData.length / legendItemsPerRow);
+    const legendHeight = legendRows * legendItemHeight + legendPadding;
+
+    return baseChartHeight + legendHeight;
+  };
+
+  const chartHeight = calculateChartHeight();
+
   return (
     <div className="card p-8 animate-in">
       {/* Header */}
@@ -56,16 +70,12 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
       </div>
 
       {/* Chart */}
-      <ResponsiveContainer
-        width="100%"
-        height={isMobile ? 350 : 400}
-        className="min-h-[350px] lg:min-h-[400px]"
-      >
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <PieChart>
           <Pie
             data={chartData}
-            innerRadius={isMobile ? 50 : 70}
-            outerRadius={isMobile ? 90 : 120}
+            innerRadius={isMobile ? 45 : 60} // Slightly reduced to make room
+            outerRadius={isMobile ? 80 : 100} // Slightly reduced to make room
             paddingAngle={3}
             dataKey="value"
           >
@@ -107,17 +117,20 @@ export default function CustomPieChart({ data, title }: PieChartProps) {
           />
           <Legend
             wrapperStyle={{
-              paddingTop: "20px",
+              paddingTop: "30px", // Increased padding between chart and legend
               fontSize: isMobile ? "12px" : "14px",
               color: "#262626",
               fontWeight: 500,
             }}
             iconSize={isMobile ? 12 : 14}
             formatter={(value) =>
-              value.length > (isMobile ? 15 : 20)
-                ? value.substring(0, isMobile ? 15 : 20) + "..."
+              value.length > (isMobile ? 12 : 18) // Slightly reduced to prevent overflow
+                ? value.substring(0, isMobile ? 12 : 18) + "..."
                 : value
             }
+            layout={isMobile ? "vertical" : "horizontal"} // Vertical layout on mobile for better spacing
+            align={isMobile ? "left" : "center"}
+            verticalAlign="bottom"
           />
         </PieChart>
       </ResponsiveContainer>

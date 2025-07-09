@@ -65,7 +65,7 @@ export default function ReportPeriodSelector({
             <button
               key={period.key}
               onClick={() => onPeriodChange(period.key)}
-              className={`relative group rounded-xl border-2 transition-all duration-300 text-left transform cursor-pointer active:scale-95 ${
+              className={`relative group rounded-xl border-2 transition-all duration-300 text-left transform cursor-pointer overflow-hidden active:scale-95 ${
                 isSelected
                   ? "border-[#698AC5] bg-gradient-to-br from-[#698AC5]/10 via-white to-[#698AC5]/5 shadow-xl shadow-[#698AC5]/20 scale-105"
                   : "border-gray-300 bg-white hover:border-[#698AC5] hover:shadow-xl hover:shadow-[#698AC5]/10 hover:scale-[1.02] hover:bg-gradient-to-br hover:from-[#698AC5]/5 hover:to-white shadow-lg"
